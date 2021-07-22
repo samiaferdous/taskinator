@@ -6,6 +6,18 @@ var tasksInProgressEl = document.querySelector("#tasks-in-progress");
 var tasksCompletedEl = document.querySelector("#tasks-completed");
 var pageContentEl = document.querySelector("#page-content");
 var tasks = [];
+var saveTasks = function() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+var pushedArr = [1, 2, 3];
+pushedArr.push(4); 
+// pushedArr is now [1,2,3,4]
+pushedArr.push("Taskinator"); 
+// pushedArr is now [1,2,3,4,"Taskinator"]
+pushedArr.push(10, "push", false); 
+// pushedArr is now [1,2,3,4,"Taskinator",10,"push",false]
+
 
 var taskFormHandler = function(event) {
   event.preventDefault();
@@ -58,8 +70,13 @@ var createTaskEl = function(taskDataObj) {
 
   taskDataObj.id = taskIdCounter;
   tasks.push(taskDataObj);
+
   // increase task counter for next unique id
   taskIdCounter++;
+
+  //save to local storage
+  saveTasks();
+
   
 };
 
@@ -124,6 +141,9 @@ var completeEditTask = function(taskName, taskType, taskId) {
   formEl.removeAttribute("data-task-id");
   // update formEl button to go back to saying "Add Task" instead of "Edit Task"
   formEl.querySelector("#save-task").textContent = "Add Task";
+
+  //save to local storage
+  saveTasks();
 };
 
 var taskButtonHandler = function(event) {
@@ -166,7 +186,8 @@ var taskStatusChangeHandler = function(event) {
       tasks[i].status = statusValue;
     }
   }
-  console.log(tasks)
+  //save to local storage
+  saveTasks();
 };
 
 var editTask = function(taskId) {
@@ -211,6 +232,9 @@ var deleteTask = function(taskId) {
 
   //reassign tasks array to be the same as updatedTaskArr
   tasks = updatedTaskArr;
+
+  //save to local storage
+  saveTasks();
 };
 
 // Create a new task
@@ -221,14 +245,3 @@ pageContentEl.addEventListener("click", taskButtonHandler);
 
 // for changing the status
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
-
-var pushedArr = [1, 2, 3];
-
-pushedArr.push(4); 
-// pushedArr is now [1,2,3,4]
-
-pushedArr.push("Taskinator"); 
-// pushedArr is now [1,2,3,4,"Taskinator"]
-
-pushedArr.push(10, "push", false); 
-// pushedArr is now [1,2,3,4,"Taskinator",10,"push",false]
